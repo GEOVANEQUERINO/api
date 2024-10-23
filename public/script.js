@@ -1,7 +1,7 @@
 const productList = document.getElementById('product-list');
 const addProductButton = document.getElementById('add-product');
 
-const API_URL = 'http://localhost:3000/products';
+const API_URL = 'http://localhost:3001/products';
 
 // Função para carregar a lista de produtos
 const loadProducts = async () => {
@@ -22,21 +22,32 @@ addProductButton.addEventListener('click', async () => {
   const quantity = parseInt(document.getElementById('quantity').value);
 
   if (!title || !description || isNaN(quantity)) {
-    alert('Please fill out all fields');
+    alert('Por favor, preencha todos os campos');
     return;
   }
 
   const newProduct = { id: Date.now(), title, description, quantity };
 
-  await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newProduct),
-  });
+  console.log(newProduct); // Verifica o que está sendo enviado
 
-  loadProducts(); // Recarrega a lista de produtos
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newProduct),
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao adicionar o produto');
+    }
+
+    loadProducts(); // Recarrega a lista de produtos
+  } catch (error) {
+    console.error(error);
+    alert('Ocorreu um erro ao adicionar o produto');
+  }
 });
 
 // Carrega os produtos ao iniciar a página

@@ -6,7 +6,9 @@ const cors = require('cors'); // Permite que o front-end consuma a API
 const path = require('path');
 
 const app = express(); // Inicializa o app Express
+app.use(cors()); // Permite requisições de outros domínios
 app.use(express.json()); // Permite que a API receba JSON no corpo das requisições
+
 // Serve a pasta "public" como conteúdo estático
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -20,13 +22,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
-app.use(cors()); // Permite requisições de outros domínios
 
-const dataFilePath = './api/data.json'; // Caminho para o arquivo de persistência de dados
+const dataFilePath = 'C:\Programacao\Stackx\api\api\data.json'; // Caminho para o arquivo de persistência de dados
 
 // Função para ler o arquivo JSON que contém os produtos
 const readData = () => {
@@ -39,14 +40,19 @@ const readData = () => {
 
 // Função para salvar os dados no arquivo JSON
 const saveData = (data) => {
-  fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2)); // Salva o array de dados como JSON
+  try {
+    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error('Erro ao salvar os dados:', err);
+    throw err; // Relança o erro para capturar no Express
+  }
 };
 
 // Esquema de validação com Joi para garantir a integridade dos dados
 const productSchema = Joi.object({
   id: Joi.number().integer().required(),         // id é obrigatório e deve ser um número inteiro
-  title: Joi.string().min(3).required(),         // title deve ter ao menos 3 caracteres
-  description: Joi.string().min(10).required(),  // description deve ter ao menos 10 caracteres
+  title: Joi.string().min(3).required(),         // titulo deve ter ao menos 3 caracteres
+  description: Joi.string().min(10).required(),  // descrição deve ter ao menos 10 caracteres
   quantity: Joi.number().integer().min(1).required() // quantity deve ser um número inteiro maior que 0
 });
 
@@ -67,11 +73,16 @@ app.get('/products', (req, res) => {
 
 // Rota para adicionar um novo produto
 app.post('/products', validateProduct, (req, res) => {
-  const products = readData(); // Lê os produtos existentes
-  const newProduct = req.body; // Pega o produto enviado no corpo da requisição
-  products.push(newProduct); // Adiciona o novo produto ao array
-  saveData(products); // Salva o array atualizado no arquivo JSON
-  res.status(201).json(newProduct); // Retorna o produto criado com status 201
+  try {
+    const products = readData(); // Lê os produtos existentes
+    const newProduct = req.body; // Pega o produto enviado no corpo da requisição
+    products.push(newProduct); // Adiciona o novo produto ao array
+    saveData(products); // Salva o array atualizado no arquivo JSON
+    res.status(201).json(newProduct); // Retorna o produto criado com status 201
+  } catch (error) {
+    console.error('Erro ao adicionar o produto:', error);
+    res.status(500).json({ message: 'Erro interno ao adicionar o produto' });
+  }
 });
 
 // Rota para atualizar um produto existente
@@ -96,7 +107,3 @@ app.delete('/products/:id', (req, res) => {
   res.json({ message: 'Product deleted' }); // Retorna uma mensagem de sucesso
 });
 
-// Inicia o servidor na porta 3000
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-});
