@@ -56,19 +56,15 @@ Resposta de sucesso:
 json
 Copiar código
 [
-  {
-    
-   
+  {   
 "id": 1,
-    
-   
 "name": "Produto 1",
-    "price": 100,
-    "description": "Descrição do produto 1"
-  
- 
+"price": 100,
+"description": "Descrição do produto 1"
+
 }
 ]
+
 2. Obter um produto específico
 Rota: /api/products/:id
 Método: GET
@@ -77,20 +73,19 @@ Parâmetros:
 id: ID do produto (numérico).
 Resposta de sucesso:
 json
-Copiar código
 {
   "id": 1,
   "name": "Produto 1",
   "price": 100,
   "description": "Descrição do produto 1"
 }
+
 3. Criar um novo produto
 Rota: /api/products
 Método: POST
 Descrição: Cria um novo produto e o salva no arquivo JSON.
 Corpo da Requisição:
 json
-Copiar código
 {
   "name": "Novo Produto",
   "price": 150,
@@ -98,7 +93,6 @@ Copiar código
 }
 Resposta de sucesso:
 json
-Copiar código
 {
   "message": "Produto criado com sucesso",
   "product": {
@@ -108,6 +102,7 @@ Copiar código
     "description": "Descrição do novo produto"
   }
 }
+
 4. Atualizar um produto existente
 Rota: /api/products/:id
 Método: PUT
@@ -116,7 +111,6 @@ Parâmetros:
 id: ID do produto (numérico).
 Corpo da Requisição:
 json
-Copiar código
 {
   "name": "Produto Atualizado",
   "price": 200,
@@ -124,7 +118,6 @@ Copiar código
 }
 Resposta de sucesso:
 json
-Copiar código
 {
   "message": "Produto atualizado com sucesso",
   "product": {
@@ -134,6 +127,7 @@ Copiar código
     "description": "Nova descrição"
   }
 }
+
 5. Deletar um produto
 Rota: /api/products/:id
 Método: DELETE
@@ -142,14 +136,15 @@ Parâmetros:
 id: ID do produto (numérico).
 Resposta de sucesso:
 json
-Copiar código
 {
   "message": "Produto deletado com sucesso"
 }
+
 Validações de Entrada
 name: Obrigatório, deve ser uma string com no mínimo 3 caracteres.
 price: Obrigatório, deve ser um número maior que 0.
 description: Opcional, se fornecido deve ser uma string.
+
 Como Contribuir
 Fork o repositório
 Crie uma nova branch para sua feature (git checkout -b feature/nome-da-feature)
@@ -157,14 +152,7 @@ Commit suas alterações (git commit -m 'Adiciona nova feature')
 Push para a branch (git push origin feature/nome-da-feature)
 Abra um Pull Request
 Licença
-Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-perl
-Copiar código
-
-Este conteúdo em Markdown pode ser colocado diretamente no arquivo `README.md` do seu repositório. A formatação é compatível com a maioria dos visualizadores de Markdown, incluindo o GitHub.
-
-
+Este projeto está licenciado sob a licença MIT. 
 
 
 
